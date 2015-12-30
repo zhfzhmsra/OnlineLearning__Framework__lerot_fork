@@ -131,7 +131,8 @@ Lerot has been used to produce results in numerous publication, including these:
 8) M. Zoghi, S. Whiteson, M. de Rijke (2015): *A Method for Large-Scale Online Ranker Evaluation*. In: WSDM'15.
 9) C. Yiwei, K. Hofmann (2015): *Online Learning to Rank: Absolute vs. Relative*. In: WWW'15.
 10) A. Schuth et al. (2015): *Probabilistic Multileave for Online Retrieval Evaluation*. In: SIGIR'15.
-
+11) A. Schuth, H. Oosterhuis, S. Whiteson, M de Rijke (2016): *Multileave Gradient Descent for Fast Online Learning to Rank*. In: WSDM'16.
+12) H. Oosterhuis, A. Schuth, M. de Rijke (2016): *Probabilistic Multileave Gradient Descent*. In: ECIR'16.
 
 If your paper is missing from this list, please let us know.
 
