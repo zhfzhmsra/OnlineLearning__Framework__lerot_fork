@@ -17,9 +17,9 @@ import random
 import argparse
 import numpy as np
 import math
-from utils import split_arg_str
+from ..utils import split_arg_str
 from OptimizedInterleave import OptimizedInterleave
-import gurobipy
+#import gurobipy
 import os
 
 

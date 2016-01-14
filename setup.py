@@ -34,7 +34,7 @@ setup(
               + [('lerot.%s' % sub)
                  for sub in ('analysis', 'comparison', 'environment',
                              'evaluation', 'experiment', 'ranker',
-                             'ranker.model', 'retrieval_system')]),
+                             'ranker.model', 'retrieval_system', 'sampler')]),
     long_description=open('README.rst', 'r').read(),
     license = "GNU Lesser General Public License",
     scripts=['scripts/learning-experiment.py',
