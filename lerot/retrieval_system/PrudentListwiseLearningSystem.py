@@ -74,7 +74,7 @@ class PrudentListwiseLearningSystem(AbstractLearningSystem):
         self.anneal = args["anneal"]
 
         self.comparison_class = get_class(args["comparison"])
-        if "comparison_args" in args and args["comparison_args"] != None:
+        if "comparison_args" in args and args["comparison_args"] is not None:
             self.comparison_args = " ".join(args["comparison_args"])
             self.comparison_args = self.comparison_args.strip("\"")
         else:

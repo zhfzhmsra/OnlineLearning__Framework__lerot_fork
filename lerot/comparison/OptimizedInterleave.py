@@ -115,7 +115,7 @@ class OptimizedInterleave(AbstractInterleavedComparison):
                                 break
                         if d in addedthislevel:
                             continue
-                        if d != None:
+                        if d is not None:
                             addedthislevel.append(d)
                             branchindexes = indexes[:]
                             branchindexes[i] = index + 1

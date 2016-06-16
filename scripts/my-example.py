@@ -51,8 +51,8 @@ while True:
             q = training_queries[qid]
             c = user_model.get_clicks(uploads[qid]['ranked_lerot_list'], q.get_labels(), 
                                       query=q, ranker_list=uploads[qid]['payload'], upload_time=uploads[qid]['upload_time'])
-            if c != None: break
-        if c != None:
+            if c is not None: break
+        if c is not None:
             print c
             break     
     s = learner.update_solution(c)

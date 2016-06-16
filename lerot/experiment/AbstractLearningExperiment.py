@@ -49,7 +49,7 @@ class AbstractLearningExperiment:
             elif self.query_sampling_method == "fixed":
                 return query_keys[query_count % query_length]
             elif self.query_sampling_method == "one":
-                if self.queryid == None:
+                if self.queryid is None:
                     self.queryid = random.randrange(query_length)
                 return query_keys[self.queryid]
 

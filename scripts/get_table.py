@@ -224,7 +224,7 @@ if __name__ == "__main__":
                 #std2 = get(ndcgpoints[exp][user][data][-1], args.measure, "std")
                 std2 = N.std(ndcgpoints[exp][user][data])
                 significance = ""
-                if args.baseline != None and baseline != exp:
+                if args.baseline is not None and baseline != exp:
                     if baseline in ndcgpoints and \
                             user in ndcgpoints[baseline] and \
                             data in ndcgpoints[baseline][user]:
@@ -259,7 +259,7 @@ if __name__ == "__main__":
         caption = """Offline performance (in terms of NDCG) when learning with
         interleaved comparison methods.  Best runs per row are highlighted in
         bold. """
-        if args.baseline != None:
+        if args.baseline is not None:
             caption += """Statistically significant improvements (losses) from
             the %s method are indicated by \enkelop ($p=0.05$) and \dubbelop
             ($p=0.01$) (\enkelneer\ and \dubbelneer).""" % baseline

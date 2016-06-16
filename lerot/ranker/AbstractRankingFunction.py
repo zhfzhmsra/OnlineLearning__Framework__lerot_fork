@@ -81,7 +81,7 @@ class AbstractRankingFunction:
         docs = []
         i = 0
         while True:
-            if numdocs != None and i >= numdocs:
+            if numdocs is not None and i >= numdocs:
                 break
             try:
                 docs.append(self.next())
@@ -100,7 +100,7 @@ class AbstractRankingFunction:
 
     def update_weights(self, w, alpha=None):
         """update weight vector"""
-        if alpha == None:
+        if alpha is None:
             self.w = w
         else:
             self.w = self.w + alpha * w

@@ -74,9 +74,9 @@ class HistoricalComparisonExperiment():
                 ranker_args = method_args["ranker_args"]
                 self.live_methods[method]["ranker"] = ranker
                 self.live_methods[method]["ranker_args"] = ranker_args
-                if not ranker in self.rankers:
+                if ranker not in self.rankers:
                     self.rankers[ranker] = {}
-                if not ranker_args in self.rankers[ranker]:
+                if ranker_args not in self.rankers[ranker]:
                     self.rankers[ranker][ranker_args] = {}
         # init hist methods
         if "hist_evaluation_methods" in args:
@@ -95,9 +95,9 @@ class HistoricalComparisonExperiment():
                 self.hist_methods[method]["ranker"] = method_args["ranker"]
                 self.hist_methods[method]["ranker_args"] = \
                     method_args["ranker_args"]
-                if not ranker in self.rankers:
+                if ranker not in self.rankers:
                     self.rankers[ranker] = {}
-                if not ranker_args in self.rankers[ranker]:
+                if ranker_args not in self.rankers[ranker]:
                     self.rankers[ranker][ranker_args] = {}
                 self.hist_methods[method]["interleave_method"] = \
                 get_class(method_args["interleave_method"])()

@@ -52,7 +52,7 @@ class SamplerSystem(AbstractLearningSystem):
         logging.info("Loaded %d weights." % len(weights))
         
         self.ranker_class = get_class(args["ranker"])
-        if "ranker_args" in args and args["ranker_args"] != None:
+        if "ranker_args" in args and args["ranker_args"] is not None:
             self.ranker_args = " ".join(args["ranker_args"])
             self.ranker_args = self.ranker_args.strip("\"")
         else:
@@ -67,7 +67,7 @@ class SamplerSystem(AbstractLearningSystem):
                         for w in weights]
         
         self.comparison_class = get_class(args["comparison"])
-        if "comparison_args" in args and args["comparison_args"] != None:
+        if "comparison_args" in args and args["comparison_args"] is not None:
             self.comparison_args = " ".join(args["comparison_args"])
             self.comparison_args = self.comparison_args.strip("\"")
         else:

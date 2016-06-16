@@ -42,7 +42,7 @@ class SimpleBufferedLineReader:
         self.__fh__ = fh
 
     def has_next(self):
-        if self.__next__ == None:  # not set
+        if self.__next__ is None:  # not set
             self.__next__ = self.__fh__.readline()
         if len(self.__next__) < 1:  # empty string - EOF
             return False
