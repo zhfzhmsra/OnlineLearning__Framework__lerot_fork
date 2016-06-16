@@ -84,6 +84,7 @@ class GenericExperiment:
 
         # determine whether to use config file or detailed args
         self.experiment_args = None
+        self.args_file = args.file
         if args.file:
             config_file = open(args.file)
             self.experiment_args = yaml.load(config_file)
@@ -112,32 +113,34 @@ class GenericExperiment:
                      self.experiment_args)
 
         # set default values for optional arguments
-        if not "query_sampling_method" in self.experiment_args:
+        if "query_sampling_method" not in self.experiment_args:
             self.experiment_args["query_sampling_method"] = "random"
-        if not "output_dir_overwrite" in self.experiment_args:
+        if "output_dir_overwrite" not in self.experiment_args:
             self.experiment_args["output_dir_overwrite"] = False
-        if not "experimenter" in self.experiment_args:
-            self.experiment_args["experimenter"] = "experiment.LearningExperiment"
-        if not "evaluation" in self.experiment_args:
+        if "experimenter" not in self.experiment_args:
+            self.experiment_args["experimenter"] = \
+                "experiment.LearningExperiment"
+        if "evaluation" not in self.experiment_args:
             self.experiment_args["evaluation"] = "evaluation.NdcgEval"
-        if not "processes" in self.experiment_args:
+        if "processes" not in self.experiment_args:
             self.experiment_args["processes"] = 0
 
         # locate or create directory for the current fold
         if not os.path.exists(self.experiment_args["output_dir"]):
             os.makedirs(self.experiment_args["output_dir"])
         elif not(self.experiment_args["output_dir_overwrite"]) and \
-                            os.listdir(self.experiment_args["output_dir"]):
+                os.listdir(self.experiment_args["output_dir"]):
             # make sure the output directory is empty
-            raise Exception("Output dir %s is not an empty directory. "
-            "Please use a different directory, or move contents out "
-            "of the way." %
-             self.experiment_args["output_dir"])
+            raise Exception(
+                "Output dir %s is not an empty directory. Please"
+                " use a different directory, or move contents out of the way."
+                % self.experiment_args["output_dir"])
 
-        logging.basicConfig(format='%(asctime)s %(module)s: %(message)s',
-                        level=logging.INFO)
-
+        logging.basicConfig(format='%(levelname)s %(module)s %(asctime)s: %(message)s',
+                            level=logging.INFO)
         logging.info("Arguments: %s" % self.experiment_args)
+
+        # Printing out arguments that are used in execution
         for k, v in sorted(self.experiment_args.iteritems()):
             logging.info("\t%s: %s" % (k, v))
         config_bk = os.path.join(self.experiment_args["output_dir"],
@@ -171,34 +174,43 @@ class GenericExperiment:
         if self.experiment_args["processes"] > 1:
             from multiprocessing import Pool
             pool = Pool(processes=self.experiment_args["processes"])
-            for run_count in range(self.num_runs):
+            results = [
                 pool.apply_async(self._run, (run_count,))
+                for run_count in range(self.num_runs)
+            ]
             pool.close()
             pool.join()
+            for result in results:
+                logging.info("Ready: {}".format(result.ready()))
+                logging.info("Successful: {}".format(result.successful()))
+            return [result.get() for result in results]
         else:
-            return [self._run(i) for i in range(self.num_runs)]
+            # Run the experiment num_runs times and return the list of results
+            return [self._run(run_id) for run_id in range(self.num_runs)]
 
     def _run(self, run_id):
         logging.info("run %d starts" % run_id)
         aux_log_file = os.path.join(self.output_dir, "_%s-%d.txt.gz" %
                                 (self.output_prefix, run_id))
         aux_log_fh = gzip.open(aux_log_file, "wb")
-        r = self.run_experiment(aux_log_fh)
+
+        # Returns summary after running an experiment
+        summarized_experiment = self.run_experiment(aux_log_fh)
         aux_log_fh.close()
+        # Setup result log file
         log_file = os.path.join(self.output_dir, "%s-%d.txt.gz" %
                                 (self.output_prefix, run_id))
         log_fh = gzip.open(log_file, "wb")
-        yaml.dump(r, log_fh, default_flow_style=False)
+        yaml.dump(summarized_experiment, log_fh, default_flow_style=False)
         log_fh.close()
         logging.info("run %d done" % run_id)
 
-        return r
+        return summarized_experiment
 
     def run_experiment(self, aux_log_fh):
+        # Run an experiment with given parameters
         experiment = self.experimenter(
-                                    self.training_queries,
-                                    self.test_queries,
-                                    self.feature_count,
-                                    aux_log_fh,
-                                    self.experiment_args)
+            self.training_queries, self.test_queries, self.feature_count,
+            aux_log_fh, self.experiment_args)
+
         return experiment.run()

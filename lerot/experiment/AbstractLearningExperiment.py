@@ -19,8 +19,8 @@ from ..utils import get_class
 
 class AbstractLearningExperiment:
 
-    def __init__(self, training_queries, test_queries, feature_count, log_fh,
-            args):
+    def __init__(
+            self, training_queries, test_queries, feature_count, log_fh, args):
         """Initialize an experiment using the provided arguments."""
         self.log_fh = log_fh
         self.training_queries = training_queries
@@ -35,12 +35,26 @@ class AbstractLearningExperiment:
         self.system_class = get_class(args["system"])
         self.system_args = args["system_args"]
         self.system = self.system_class(self.feature_count, self.system_args)
-        #if isinstance(self.system, AbstractOracleSystem):
-        #    self.system.set_test_queries(self.test_queries)
-        self.evaluations = {}
-        for evaluation in args["evaluation"]:
-            self.evaluation_class = get_class(evaluation)
-            self.evaluations[evaluation] = self.evaluation_class()
+        # if isinstance(self.system, AbstractOracleSystem):
+        #     self.system.set_test_queries(self.test_queries)
+        self.evaluations = []
+        for eval_args in args["evaluation"]:
+            # Handle evaluation arguments
+            split_args = eval_args.split()
+            # First element in this list is the evaluation method
+            kwargs = {}
+            # read in additional arguments
+            for i in xrange(1, len(split_args)-1, 2):
+                kwargs[split_args[i]] = int(split_args[i+1])
+
+            # Here go default values
+            if 'cutoff' not in kwargs:
+                kwargs['cutoff'] = -1
+
+            # Put everything in dict
+            eval_name = split_args[0]
+            kwargs['eval_class'] = get_class(eval_name)()
+            self.evaluations.append((eval_name, kwargs))
         self.queryid = None
 
     def _sample_qid(self, query_keys, query_count, query_length):
