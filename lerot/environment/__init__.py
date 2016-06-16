@@ -18,6 +18,7 @@ from FederatedClickModel import FederatedClickModel
 from PositionBasedUserModel import PositionBasedUserModel
 from RandomClickModel import RandomClickModel
 from LivingLabsRealUser import LivingLabsRealUser
+from RelevantUserModel import RelevantUserModel
 
 __all__ = ['CascadeUserModel', 'FederatedClickModel', 'PositionBasedUserModel',
-           'RandomClickModel', 'LivingLabsRealUser']
+           'RandomClickModel', 'LivingLabsRealUser', 'RelevantUserModel']
