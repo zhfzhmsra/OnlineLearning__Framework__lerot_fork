@@ -28,7 +28,7 @@ class NdcgEval(DcgEval):
 
     def evaluate_ranking(self, ranking, query, cutoff=-1):
         """
-        Compute DCG for the provided ranking. The ranking is expected
+        Compute NDCG for the provided ranking. The ranking is expected
         to contain document ids in rank order.
         """
         if cutoff == -1 or cutoff > len(ranking):
