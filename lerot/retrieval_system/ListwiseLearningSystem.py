@@ -43,7 +43,7 @@ class ListwiseLearningSystem(AbstractLearningSystem):
         parser.add_argument("-c", "--comparison", required=True)
         parser.add_argument("-f", "--comparison_args", nargs="*")
         parser.add_argument("-r", "--ranker", required=True)
-        parser.add_argument("-s", "--ranker_args", nargs="*")
+        parser.add_argument("-s", "--ranker_args", nargs="*", default=[])
         parser.add_argument("-t", "--ranker_tie", default="random")
         parser.add_argument("-d", "--delta", required=True, type=str)
         parser.add_argument("-a", "--alpha", required=True, type=str)
@@ -84,6 +84,8 @@ class ListwiseLearningSystem(AbstractLearningSystem):
         self.query_count = 0
 
     def _get_new_candidate(self):
+        # Get a new candidate whose weights are slightly changed with strength
+        # delta.
         w, u = self.ranker.get_candidate_weight(self.delta)
         candidate_ranker = copy.deepcopy(self.ranker)
         candidate_ranker.update_weights(w)
