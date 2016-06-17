@@ -209,7 +209,7 @@ class QueryStream:
                 self.__reader__.rewind()
                 break
             features = [tuple(t.split(":")) for t in tokens[2:]]
-            tmp_array = np.zeros((1, len(features)))
+            tmp_array = np.zeros((1, self.__num_features__))
             for k, v in features:
                 tmp_array[0, int(k) - 1] = float(v)
             if not initialized:

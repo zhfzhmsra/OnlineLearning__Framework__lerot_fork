@@ -17,13 +17,17 @@
 """
 Utility functions
 """
-
+import sys
 from importlib import import_module
 from numpy import dot, sqrt
 import numpy as np
 from scipy.linalg import norm
 from random import sample
 
+# Used for printing some characters on screen
+def write_chars(loading_amount, char):
+    for _ in range(loading_amount):
+        sys.stdout.write(char)
 
 def string_to_boolean(string):
     string = string.lower()
@@ -49,7 +53,7 @@ def get_class(name):
         msg = ('%s while trying to import %r from %r'
                % (e.args[0], classname, module))
         e.args = (msg,) + e.args[1:]
-        raise
+        raise e
 
 
 def split_arg_str(arg_str):
@@ -68,7 +72,7 @@ def split_arg_str(arg_str):
             closing_index = arg_str.find("\"", index + 1)
             if closing_index == -1:
                 raise ValueError("Argument string contains non-matched quotes:"
-                    " %s" % arg_str)
+                                 " %s" % arg_str)
             s.append(arg_str[index + 1:closing_index])
             max_index = closing_index + 1
     return s
@@ -105,11 +109,11 @@ def get_binomial_ci(p_hat, n):
     zA = 1.960
     # http://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval
     # http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
-        #n = float(totalW1 + totalW2)
+    # n = float(totalW1 + totalW2)
     lower = (p_hat + zA * zA / (2 * n) - zA * sqrt((p_hat * (1 - p_hat) +
-        zA * zA / (4 * n)) / n)) / (1 + zA * zA / n)
+             zA * zA / (4 * n)) / n)) / (1 + zA * zA / n)
     upper = (p_hat + zA * zA / (2 * n) + zA * sqrt((p_hat * (1 - p_hat) +
-        zA * zA / (4 * n)) / n)) / (1 + zA * zA / n)
+             zA * zA / (4 * n)) / n)) / (1 + zA * zA / n)
     return (lower, upper)
 
 
@@ -123,3 +127,21 @@ def sample_unit_sphere(n):
 
 def sample_fixed(self, n):
     return np.ones(n) / sqrt(n)
+
+
+def create_ranking_vector(current_query, ranking):
+    """
+    Create a ranking vector from a matrix of document vectors.
+    See above section 4.1 in Raman et al. (2013a)
+    """
+    feature_matrix = current_query.get_feature_vectors()
+    feature_matrix = np.array(
+        [feature_matrix[doc.get_id()] for doc in ranking]
+    )
+
+    # Calculate number of documents
+    ndocs = feature_matrix.shape[0]
+    # log(1) = 0, so fix this by starting range at 2
+    gamma = 1.0 / np.log2(np.arange(2, ndocs + 2, dtype=float))
+    # Assume the features are row vectors
+    return np.sum(feature_matrix.transpose() * gamma, axis=1)

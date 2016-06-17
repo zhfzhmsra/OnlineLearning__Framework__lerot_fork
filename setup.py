@@ -25,8 +25,8 @@ setup(
     version = __version__,
     author = "Katja Hofmann, Anne Schuth",
     author_email = "katja.hofmann@microsoft.com, anne.schuth@uva.nl",
-    description = ("This project is designed to run experiments on online\
-                    learning to rank methods for information retrieval."),
+    description = ("This project is designed to run experiments on online " +
+                   "learning to rank methods for information retrieval."),
     keywords = "online learning to rank for information retrieval",
     url = "https://bitbucket.org/ilps/lerot",
     download_url = "https://bitbucket.org/ilps/lerot/downloads",
@@ -34,7 +34,8 @@ setup(
               + [('lerot.%s' % sub)
                  for sub in ('analysis', 'comparison', 'environment',
                              'evaluation', 'experiment', 'ranker',
-                             'ranker.model', 'retrieval_system', 'sampler')]),
+                             'ranker.model', 'retrieval_system', 'sampler',
+                             'perturbation')]),
     long_description=open('README.rst', 'r').read(),
     license = "GNU Lesser General Public License",
     scripts=['scripts/learning-experiment.py',
