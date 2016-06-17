@@ -1,6 +1,6 @@
 test_queries: data/Fold1/test.txt
 training_queries: data/Fold1/train.txt
-feature_count: 46 # 64 for .Gov, 46 for MQ*, 136 for MSLR, 700 for Webscope
+feature_count: 64 # 64 for .Gov, 46 for MQ*, 136 for MSLR, 700 for Webscope
 num_runs: 10
 num_queries: 1017
 processes: 1
