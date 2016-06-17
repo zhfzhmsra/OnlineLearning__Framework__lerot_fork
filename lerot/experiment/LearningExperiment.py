@@ -21,12 +21,10 @@ lists
 """
 
 import sys
-import time
 import logging
 import warnings
 from numpy.linalg import norm
 
-from ..utils import write_chars
 from ..utils import get_cosine_similarity
 from AbstractLearningExperiment import AbstractLearningExperiment
 
@@ -60,27 +58,8 @@ class LearningExperiment(AbstractLearningExperiment):
             # offline_train_evaluation[dict_name] = []
         similarities = [.0]
 
-        sys.stdout.write("Estimated completion time: ")
-        sys.stdout.flush()
-        query_time = 0
-        total_time = 0
-
         # Process queries
         for query_count in xrange(self.num_queries):
-            # Calculate time it took do do one query
-            completion_time = time.clock() - query_time
-            total_time+=completion_time
-
-            # Record time it took to do one query            
-            query_time = time.clock()
-
-            # Every five queries calculate the estimated completion time
-            if query_count % 10 == 0 and query_count > 0:
-                estimated_time = str((total_time/query_count)*(self.num_queries - query_count))
-                sys.stdout.write(estimated_time)
-                write_chars(len(estimated_time), '\b')
-                sys.stdout.flush()
-
             logging.debug("Query nr: {}".format(query_count))
             previous_solution_w = self.system.get_solution().w
             qid = self._sample_qid(query_keys, query_count, query_length)

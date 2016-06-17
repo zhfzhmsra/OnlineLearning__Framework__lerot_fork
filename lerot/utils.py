@@ -24,10 +24,6 @@ import numpy as np
 from scipy.linalg import norm
 from random import sample
 
-# Used for printing some characters on screen
-def write_chars(loading_amount, char):
-    for _ in range(loading_amount):
-        sys.stdout.write(char)
 
 def string_to_boolean(string):
     string = string.lower()
