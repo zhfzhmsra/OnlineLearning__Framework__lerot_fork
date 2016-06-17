@@ -1,0 +1,32 @@
+test_queries: data/Fold1/test.txt
+training_queries: data/Fold1/train.txt
+feature_count: 46 # 64 for .Gov, 46 for MQ*, 136 for MSLR, 700 for Webscope
+num_runs: 10
+num_queries: 1017
+processes: 1
+query_sampling_method: fixed
+user_model: environment.RelevantUserModel
+# for p-click and p-stop provide mappings from relevance grades to probabilities
+user_model_args: -limit -1
+system: retrieval_system.PerturbationLearningSystem
+system_args:
+    # for 3PR weights should be initialised with zero
+    --init_weights zero
+    --ranker ranker.DeterministicRankingFunction
+    --ranker_tie random
+    --perturbator perturbation.ProbabilisticPerturbator
+    --swap_prob 0.25
+
+output_dir: 3PR-output
+output_dir_overwrite: True
+output_prefix: Fold1
+
+# Possible parameters for eval:
+#   - cutoff: will cut off the ranking for every eval
+#             (offline/online, train/test). Not using this parameter will
+#             default it to the length of the ranking
+evaluation:
+    - evaluation.NdcgEval cutoff 5
+    - evaluation.DcgEval cutoff 5
+    - evaluation.PAKEval cutoff 1
+experimenter: experiment.LearningExperiment
