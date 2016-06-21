@@ -1,3 +1,18 @@
+# This file is part of Lerot.
+#
+# Lerot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Lerot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Lerot.  If not, see <http://www.gnu.org/licenses/>.
+
 from numpy import *
 set_printoptions(precision=5, suppress=True, linewidth=999999)
 from numpy.random import rand, beta
@@ -43,7 +58,7 @@ class SAVAGESampler(AbstractSampler):
                             action="store_true", default=False)
         # Parameters specific to Beat the Mean:
         parser.add_argument("--sampler_horizon", type=int, default=1000)
-        parser.add_argument("--sampler_non_transitivity", 
+        parser.add_argument("--sampler_non_transitivity",
                             type=float, default=1.)
         args = vars(parser.parse_known_args(arg_str.split())[0])
         self.nArms = len(arms)  # Number of arms
@@ -71,11 +86,11 @@ class SAVAGESampler(AbstractSampler):
             self.runMessage = ""
         else:
             self.runMessage = "Run %s: " % str(run_count)
-        
-        
+
+
     def c(self,N):
         return sqrt(log(0.0+self.nArms*(self.nArms-1)*self.horizon**2)/(2*N))
-    
+
     def indep_test(self):
         I,J = nonzero(self.activePairs)
         uI, = nonzero(self.activePairs.any(axis=1))
@@ -97,7 +112,7 @@ class SAVAGESampler(AbstractSampler):
         for i in newIndepArms:
             self.activePairs[i,:] = 0
             self.activePairs[:,i] = 0
-    
+
     def stop_explore(self):
         I,J = nonzero(self.activePairs)
         if sum(I.shape) == 0:
@@ -107,7 +122,7 @@ class SAVAGESampler(AbstractSampler):
         if U_cop[bestArm] == self.nArms-1 and \
             (self.PMat[bestArm,:]-self.C[bestArm,:] > 0.5).sum() == self.nArms-1:
             return True
-    
+
     def get_arms(self,withFig=False):
         # This returns two arms to compare.
         if self.exploit:
@@ -124,8 +139,8 @@ class SAVAGESampler(AbstractSampler):
                                     # the NON-zero numbers.
         return self.lArms[self.firstPlace], self.lArms[self.secondPlace], \
                     self.firstPlace, self.secondPlace
-    
-    
+
+
     def update_scores(self, winner, loser, score=1):
         if self.softScoring == False:
             score = 1.
@@ -160,7 +175,7 @@ class SAVAGESampler(AbstractSampler):
         self.C_plus_PMat[second, first] = self.C[second, first] \
                                         + self.PMat[second, first]
         return self.dictArms[winner]
-    
+
     def get_winner(self):
         if self.champ == []:
             self.numPlays = self.RealWins+self.RealWins.T

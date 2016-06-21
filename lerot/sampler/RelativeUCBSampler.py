@@ -1,3 +1,18 @@
+# This file is part of Lerot.
+#
+# Lerot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Lerot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Lerot.  If not, see <http://www.gnu.org/licenses/>.
+
 from numpy import *
 from numpy.random import shuffle
 from random import randint
@@ -20,7 +35,7 @@ class RelativeUCBSampler(AbstractSampler):
         parser = argparse.ArgumentParser(prog=self.__class__.__name__)
         parser.add_argument("--sampler", type=str)
         parser.add_argument("--RUCB_alpha_parameter", type=float, default=0.5)
-        parser.add_argument("--continue_sampling_experiment", type=str, 
+        parser.add_argument("--continue_sampling_experiment", type=str,
                           default="No")
         parser.add_argument("--old_output_dir", type=str, default="")
         parser.add_argument("--old_output_prefix", type=str, default="")
@@ -60,14 +75,14 @@ class RelativeUCBSampler(AbstractSampler):
             data.close()
             logging.info("Done reading "+old_file)
 
-    
-    
+
+
     def get_UCB(self):
         self.UCB = self.PMat + \
                 sqrt(self.alpha*log(self.t)) * self.invSqrtNumPlays
         fill_diagonal(self.UCB,.5)
-    
-    
+
+
     def sample_tournament(self):
         # firstPlace, secondPlace = sample_tournament()
         self.get_UCB()
@@ -78,8 +93,8 @@ class RelativeUCBSampler(AbstractSampler):
                          +"Potential champions: %s" \
                          % nonzero(potentialChamps)[0].tolist())
         return getArgmax(potentialChamps) # * UCB.max(axis=1))
-    
-    
+
+
     def do_UCB_rel_champ(self,champ):
         arms = self.iArms
         rWins = self.RealWins
@@ -87,8 +102,8 @@ class RelativeUCBSampler(AbstractSampler):
         ucb = self.UCB[:,champ]
         challenger = arms[getArgmax(ucb)]
         return challenger
-    
-    
+
+
     def get_arms(self):
         # This returns two arms to compare.
         firstPlace = self.sample_tournament()
@@ -96,8 +111,8 @@ class RelativeUCBSampler(AbstractSampler):
         if self.chatty and self.t % 1000 == 0:
             logging.info("Iteration %d: Selected arm %d and arm %d \nScore sheet: \n%s" \
                     % (self.t, firstPlace, secondPlace, self.RealWins))
-        return self.lArms[firstPlace], self.lArms[secondPlace], firstPlace, secondPlace    
-    
+        return self.lArms[firstPlace], self.lArms[secondPlace], firstPlace, secondPlace
+
     def update_scores(self,winner,loser):
         winner = self.dictArms[winner]
         loser = self.dictArms[loser]
@@ -114,7 +129,7 @@ class RelativeUCBSampler(AbstractSampler):
             self.RealWins[loser,winner]/self.numPlays[loser,winner]
         self.t = self.t + 1
         return winner
-    
+
     def get_winner(self):
         rWins = self.RealWins
         scores = rWins.sum(axis=1)
@@ -123,4 +138,3 @@ class RelativeUCBSampler(AbstractSampler):
         shuffle(Inds)
         firstPlace = Inds[0]
         return self.lArms[firstPlace]
-    

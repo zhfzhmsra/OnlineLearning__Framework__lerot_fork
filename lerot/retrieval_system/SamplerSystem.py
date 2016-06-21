@@ -1,3 +1,18 @@
+# This file is part of Lerot.
+#
+# Lerot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Lerot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Lerot.  If not, see <http://www.gnu.org/licenses/>.
+
 from numpy import *
 import argparse
 import logging
@@ -50,7 +65,7 @@ class SamplerSystem(AbstractLearningSystem):
                 weights.append(weight)
                 logging.info("Loaded weight from file %s." % f)
         logging.info("Loaded %d weights." % len(weights))
-        
+
         self.ranker_class = get_class(args["ranker"])
         if "ranker_args" in args and args["ranker_args"] is not None:
             self.ranker_args = " ".join(args["ranker_args"])
@@ -65,7 +80,7 @@ class SamplerSystem(AbstractLearningSystem):
                                           init=",".join([str(n) for n in w]),
                                           sample=self.sample_weights)
                         for w in weights]
-        
+
         self.comparison_class = get_class(args["comparison"])
         if "comparison_args" in args and args["comparison_args"] is not None:
             self.comparison_args = " ".join(args["comparison_args"])
@@ -73,10 +88,10 @@ class SamplerSystem(AbstractLearningSystem):
         else:
             self.comparison_args = None
         self.comparison = self.comparison_class(self.comparison_args)
-        
+
         self.r1 = 0     # One ranker to be compared in live evaluation.
         self.r2 = 0     # The other ranker to be compared against self.r1.
-        
+
         sampler_class = get_class(args["sampler"])
         try:
             self.sampler = sampler_class(self.rankers, arg_str, run_count)
