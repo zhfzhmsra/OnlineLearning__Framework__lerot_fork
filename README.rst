@@ -144,22 +144,25 @@ Contributors
 ------------
 The following people have contributed to Lerot:
 
-- Katja Hofmann
-- Anne Schuth
-- Harrie Oosterhuis
+- Katja Hofmann (Microsoft Research)
+- Anne Schuth (Blendle)
+- Harrie Oosterhuis  (University of Amsterdam)
 - Jos van der Velde
 - Lars Buitinck
 - Aleksandr Chuklin
 - Floor Sietsma
 - Spyros Michaelides
-- Robert-Jan Bruintjes
-- David Woudenberg
-- Carla Groenland
-- Masrour Zoghi
-- Nikos Voskarides
-- Artem Grotov
+- Robert-Jan Bruintjes (University of Amsterdam)
+- David Woudenberg (University of Amsterdam)
+- Carla Groenland (University of Amsterdam)
+- Masrour Zoghi  (University of Amsterdam)
+- Nikos Voskarides  (University of Amsterdam)
+- Artem Grotov  (University of Amsterdam)
 - Yiwei Chen
 - Saúl Vargas
+- Rolf Jagerman (University of Amsterdam)
+- Michiel van der Meer 
+- Martin van Harmelen
 
 If your name is missing from this list, please let us know.
 
