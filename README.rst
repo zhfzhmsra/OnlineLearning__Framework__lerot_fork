@@ -163,6 +163,9 @@ The following people have contributed to Lerot:
 - Rolf Jagerman (University of Amsterdam)
 - Michiel van der Meer 
 - Martin van Harmelen
+- Verna Dankers
+- Maarten Boon
+- Thomas Groot
 
 If your name is missing from this list, please let us know.
 
