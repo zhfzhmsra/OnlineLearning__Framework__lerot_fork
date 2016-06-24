@@ -31,8 +31,11 @@ class AbstractRankingFunction:
         for arg in ranker_arg_str:
             if type(arg) is str and arg.startswith("ranker.model"):
                 ranking_model_str = arg
-            elif type(arg) is int or type(arg) is float:
-                self.ranker_type = float(arg)
+            elif arg is not None:
+                try:
+                    self.ranker_type = float(arg)
+                except ValueError:
+                    pass
         self.ranking_model = get_class(ranking_model_str)(feature_count)
 
         if sample:
