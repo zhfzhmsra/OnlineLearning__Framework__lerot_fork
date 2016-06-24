@@ -1,3 +1,18 @@
+# This file is part of Lerot.
+#
+# Lerot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Lerot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Lerot.  If not, see <http://www.gnu.org/licenses/>.
+
 from numpy import *
 from numpy.random import rand, beta
 from random import randint
@@ -29,18 +44,18 @@ class fastBeta:
         self.sampleAllBeta()
         self.depthIndex = 0
         self.upper_or_lower = 'UPPER'
-    
+
     def sampleAllBeta(self):
         self.allSamples = 0.5*ones(self.shape+(self.depth,))
         for r,c in [(row,col) for row in range(self.shape[0]) \
                               for col in range(self.shape[1]) if row != col]:
             self.allSamples[r,c,:] = beta(self.W[r,c],self.W[c,r],self.depth)
-    
+
     def update(self,r,c,w):
         self.W[r,c] = w
         self.allSamples[r,c,:] = beta(self.W[r,c],self.W[c,r],self.depth)
         self.allSamples[c,r,:] = beta(self.W[c,r],self.W[r,c],self.depth)
-    
+
     def getSamples(self):
         if self.upper_or_lower == 'UPPER':
             if self.depthIndex > self.depth-1:
@@ -86,7 +101,7 @@ class RelativeThompsonSampler(AbstractSampler):
         self.SampleWins = (Samples > 0.5) + ((Samples > 0) & (Samples < 0.5)).T
         if self.t % 1000 == 0:
             logging.info("%s%d- Top tounament score = %d    " \
-                         % ( self.runMessage, self.t, 
+                         % ( self.runMessage, self.t,
                              self.SampleWins.sum(axis=1).max() ) \
                         + "Top tournament scorers from weak to strong: %s" \
                         % self.SampleWins.sum(axis=1).argsort()[-20:])

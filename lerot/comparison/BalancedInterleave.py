@@ -29,7 +29,10 @@ class BalancedInterleave(AbstractInterleavedComparison):
     """Interleave and compare rankers using the original balanced
     interleave method."""
 
-    def __init__(self, arg_str="random"):
+    def __init__(self, arg_str=None):
+        # this check prevents errors from the if statement at #36
+        if arg_str is None:
+            arg_str = "random"
         if arg_str.startswith("--"):
             parser = argparse.ArgumentParser(description="Parse arguments for "
                 "interleaving method.", prog=self.__class__.__name__)

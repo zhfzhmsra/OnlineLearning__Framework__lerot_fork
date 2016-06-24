@@ -38,7 +38,7 @@ class HistProbabilisticInterleave(AbstractHistInterleavedComparison):
             parser.add_argument("-b", "--biased")
             parser.add_argument("-m", "--marginalize")
             args = vars(parser.parse_known_args(split_arg_str(arg_str))[0])
-            if args["biased"] == "False" or args["biased"] == None \
+            if args["biased"] == "False" or args["biased"] is None \
                 or args["biased"] == 0:
                 self.biased = False
             else:

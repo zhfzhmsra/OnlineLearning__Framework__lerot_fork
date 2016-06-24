@@ -42,7 +42,7 @@ class SimpleBufferedLineReader:
         self.__fh__ = fh
 
     def has_next(self):
-        if self.__next__ == None:  # not set
+        if self.__next__ is None:  # not set
             self.__next__ = self.__fh__.readline()
         if len(self.__next__) < 1:  # empty string - EOF
             return False
@@ -209,7 +209,7 @@ class QueryStream:
                 self.__reader__.rewind()
                 break
             features = [tuple(t.split(":")) for t in tokens[2:]]
-            tmp_array = np.zeros((1, len(features)))
+            tmp_array = np.zeros((1, self.__num_features__))
             for k, v in features:
                 tmp_array[0, int(k) - 1] = float(v)
             if not initialized:

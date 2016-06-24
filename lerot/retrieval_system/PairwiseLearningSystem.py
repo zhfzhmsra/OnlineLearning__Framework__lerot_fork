@@ -51,7 +51,7 @@ class PairwiseLearningSystem(AbstractLearningSystem):
         # initialize weights, comparison method, and learner
         w = self.initialize_weights(args["init_weights"], self.feature_count)
         self.ranker_class = get_class(args["ranker"])
-        if "ranker_args" in args and args["ranker_args"] != None:
+        if "ranker_args" in args and args["ranker_args"] is not None:
             self.ranker_args = " ".join(args["ranker_args"])
             self.ranker_args = self.ranker_args.strip("\"")
         else:

@@ -240,7 +240,7 @@ if __name__ == "__main__":
                                 w = rawline[:10000]
                                 if not user in ndcgpoints[exp]:
                                     count += 1
-                                    if aggregation[metric] == None:
+                                    if aggregation[metric] is None:
                                         aggregation[metric] = w
                                     else:
                                         for i, x in enumerate(w):

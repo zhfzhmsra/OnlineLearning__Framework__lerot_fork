@@ -120,7 +120,7 @@ class HistTeamDraft(AbstractHistInterleavedComparison):
         """assign clicks for contributed documents"""
 
         a = self._get_possible_assignment(l, target_r1, target_r2, query)
-        if a == None:
+        if a is None:
             return 0
 
         c1 = sum([1 if val_a == 0 and val_c == 1 else 0

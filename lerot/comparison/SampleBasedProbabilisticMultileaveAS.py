@@ -1,3 +1,18 @@
+# This file is part of Lerot.
+#
+# Lerot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Lerot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Lerot.  If not, see <http://www.gnu.org/licenses/>.
+
 import argparse
 from collections import defaultdict
 from random import randint
@@ -247,7 +262,7 @@ class SampleBasedProbabilisticMultileaveAS(AbstractInterleavedComparison):
         - credits: list of credits for each ranker
         '''
         total_pref = np.zeros((len(p[0]), len(p[0])))
- 
+
         for i in range(self.n_samples):
             creds = np.zeros(len(p[0]))
             for probs in p:
@@ -290,4 +305,3 @@ class SimpleTree:
         self.prob = prob
         self.outcome = outcome
         self.leaves = []
-

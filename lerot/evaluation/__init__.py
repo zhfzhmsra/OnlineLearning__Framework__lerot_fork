@@ -17,6 +17,7 @@ from AsRbpEval import AsRbpEval
 from DcgEval import DcgEval
 from NdcgEval import NdcgEval
 from LetorNdcgEval import LetorNdcgEval
+from PAKEval import PAKEval
 
 from VSEval import VSEval
 from VDEval import VDEval
@@ -26,13 +27,14 @@ from RPEval import RPEval
 from LivingLabsEval import LivingLabsEval
 
 __all__ = [
-    'AsRbpEval'
+    'AsRbpEval',
     'DcgEval',
     'NdcgEval',
-    'LetorNdcgEval'
+    'LetorNdcgEval',
     'VSEval',
     'VDEval',
     'ISEval',
     'RPEval',
-    'LivingLabsEval'
+    'LivingLabsEval',
+    'PAKEval',
 ]

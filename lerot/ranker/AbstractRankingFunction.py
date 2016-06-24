@@ -48,6 +48,9 @@ class AbstractRankingFunction:
         return self.ranking_model.score(features, self.w.transpose())
 
     def get_candidate_weight(self, delta):
+        """Delta is a change parameter: how much are your weights affected by
+        the weight change?"""
+        # Some random value from the n-sphere,
         u = self.sample(self.ranking_model.get_feature_count())
         return self.w + delta * u, u
 
@@ -84,7 +87,7 @@ class AbstractRankingFunction:
         docs = []
         i = 0
         while True:
-            if numdocs != None and i >= numdocs:
+            if numdocs is not None and i >= numdocs:
                 break
             try:
                 docs.append(self.next())
@@ -103,7 +106,7 @@ class AbstractRankingFunction:
 
     def update_weights(self, w, alpha=None):
         """update weight vector"""
-        if alpha == None:
+        if alpha is None:
             self.w = w
         else:
             self.w = self.w + alpha * w

@@ -1,3 +1,18 @@
+# This file is part of Lerot.
+#
+# Lerot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Lerot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Lerot.  If not, see <http://www.gnu.org/licenses/>.
+
 from numpy import *
 import random
 import logging
@@ -29,7 +44,7 @@ class armTree:
         Inds[-1] = len(iArms)
         for i in range(len(Inds)-1):
             self.armGroups.append([iArms[j] for j in range(Inds[i],Inds[i+1])])
-    
+
     def pruneGroup(self,i,UCB):
         group = self.armGroups[i]
         if len(group) != UCB.shape[0]:
@@ -40,7 +55,7 @@ class armTree:
         for ind in range(L.shape[0]):
             self.armGroups[i].pop(L[ind])
         return L.shape[0] > 0
-    
+
     def mergeGroups(self):
         oldAG = self.armGroups[:]
         random.shuffle(oldAG)
@@ -57,19 +72,19 @@ class armTree:
             else:
                 self.armGroups.append(oldAG[i]+oldAG[j])
                 i = i+1; j = j-1
-    
+
     def mergePairOfBatches(self,i,j):
         self.armGroups[i] = self.armGroups[i] + self.armGroups.pop(j)
-    
+
     def numArms(self):
         return sum([len(ag) for ag in self.armGroups])
-    
+
     def __getitem__(self,key):
         return self.armGroups[key % len(self.armGroups)]
-    
+
     def __len__(self):
         return len(self.armGroups)
-    
+
     def index(self,batch):
         return self.armGroups.index(batch)
 
@@ -83,7 +98,7 @@ class mergeRUCBSampler(AbstractSampler):
         parser.add_argument("--RUCB_alpha_parameter", type=float, default=0.5)
         parser.add_argument("--mergeRUCB_batch_size", type=int, default=4)
         parser.add_argument("--mergeRUCB_delta", type=float, default=0.01)
-        parser.add_argument("--continue_sampling_experiment", type=str, 
+        parser.add_argument("--continue_sampling_experiment", type=str,
                             default="No")
         parser.add_argument("--old_output_dir", type=str, default="")
         parser.add_argument("--old_output_prefix", type=str, default="")
@@ -136,7 +151,7 @@ class mergeRUCBSampler(AbstractSampler):
 #                print "data['armGroups'] = ", data['armGroups']
 #                print "data['RealWins'] = \n", data['RealWins']
                 self.tArms.armGroups = [[self.lArms.index(self.initArms[a])
-                                         for a in ag] 
+                                         for a in ag]
                                         for ag in data['armGroups'].tolist()]
 #                print self.tArms.armGroups
                 self.iteration = int(data['iteration'])
@@ -145,8 +160,8 @@ class mergeRUCBSampler(AbstractSampler):
                 logging.info("Done reading "+old_file)
 #                print "RealWins = \n", self.RealWins
 
-    
-    
+
+
     def getUCB(self):
         Inds = self.tArms[self.currentBatch]
         while len(Inds) <= 1 and len(self.tArms) > 1:
@@ -155,8 +170,8 @@ class mergeRUCBSampler(AbstractSampler):
         self.UCB = self.PMat[ix_(Inds,Inds)] + \
             sqrt(self.alpha*log(self.t)) * self.invSqrtNumPlays[ix_(Inds,Inds)]
         fill_diagonal(self.UCB,.5)
-    
-    
+
+
     def sampleTournament(self,withFig=False):
         self.getUCB()
         while self.tArms.pruneGroup(self.currentBatch, self.UCB):
@@ -164,8 +179,8 @@ class mergeRUCBSampler(AbstractSampler):
         arms = self.tArms[self.currentBatch]
         champ = arms[randint(0,len(arms)-1)]
         return champ
-    
-    
+
+
     def doUCBRelChamp(self,champ,withFig=False):
         champInd = self.tArms[self.currentBatch].index(champ)
         ucb = self.UCB[:,champInd]
@@ -173,8 +188,8 @@ class mergeRUCBSampler(AbstractSampler):
         challengerInd = myArgmax(ucb)
         challenger = self.tArms[self.currentBatch][challengerInd]
         return challenger
-    
-    
+
+
     def get_arms(self,withFig=False):
     # This returns two arms to compare.
         firstPlace = self.sampleTournament(withFig)
@@ -184,8 +199,8 @@ class mergeRUCBSampler(AbstractSampler):
         i1 = self.initArms.index(r1)
         i2 = self.initArms.index(r2)
         return r1, r2, i1, i2
-    
-    
+
+
     def update_scores(self,r_winner,r_loser):
     # This method can be used to update the scores.
         winner = self.dictArms[r_winner]
@@ -210,7 +225,7 @@ class mergeRUCBSampler(AbstractSampler):
                 self.tArms.mergeGroups()
             self.iteration = self.iteration + 1
             logging.info("%s%d- Iteration %d" \
-                         % (self.runMessage, self.t - ceil(self.C), 
+                         % (self.runMessage, self.t - ceil(self.C),
                             self.iteration))
         self.RealWins[winner,loser] += 1
         self.numPlays[winner,loser] += 1
@@ -226,8 +241,8 @@ class mergeRUCBSampler(AbstractSampler):
         self.currentBatch = (self.currentBatch+1) % len(self.tArms)
         self.t = self.t + 1
         return self.initArms.index(r_winner)
-    
-    
+
+
     def get_winner(self):
     # This method can be called to find out which arm is the best so far.
         self.numPlays = self.RealWins+self.RealWins.T
@@ -251,7 +266,7 @@ class mergeRUCBSampler(AbstractSampler):
 
 #################### OLD CODE ########################
 
-###### V3: 
+###### V3:
 #    def isReady(self,UCB,width):
 #        sideUCB = sign(UCB+eye(UCB.shape[0])-0.5)
 #        LCB = 1-UCB.T
@@ -259,7 +274,7 @@ class mergeRUCBSampler(AbstractSampler):
 #        isClear = ((sideUCB * sideLCB) > 0).all(axis=1).any()
 #        isClear = isClear & (UCB-LCB < width).all()
 #        return isClear
-#    
+#
 #    def readyBatches(self,UCB,width):
 #        ready = zeros(len(self.armGroups))
 #        for ind in range(len(self.armGroups)):
@@ -361,8 +376,8 @@ class mergeRUCBSampler(AbstractSampler):
 #        self.UCB = self.PMat[ix_(Inds,Inds)] + \
 #            sqrt(self.alpha*log(self.t)) * self.invSqrtNumPlays[ix_(Inds,Inds)]
 #        fill_diagonal(self.UCB,.5)
-#    
-#    
+#
+#
 #    def getFullUCB(self):
 #        rWins = self.RealWins
 #        A = rWins
@@ -371,25 +386,25 @@ class mergeRUCBSampler(AbstractSampler):
 #        UCB = A/N + sqrt(self.alpha*log(self.t)/N)
 #        fill_diagonal(UCB,.5)
 #        return UCB
-#    
+#
 #    def sampleTournament(self,withFig=False):
 #        self.getUCB()
 #        potentialChamps = (self.UCB >= .5).all(axis=1)
 #        champInd = myArgmax(potentialChamps)
 #        champ = self.tArms[self.currentBatch][champInd]
 #        return champ # * UCB.max(axis=1))
-#    
-#    
+#
+#
 #    def doUCBRelChamp(self,champ,withFig=False):
 #        champInd = self.tArms[self.currentBatch].index(champ)
 #        ucb = self.UCB[:,champInd]
 #        if len(self.tArms) > 1:
-#            ucb[champInd] = 0 
+#            ucb[champInd] = 0
 #        challengerInd = myArgmax(ucb)
 #        challenger = self.tArms[self.currentBatch][challengerInd]
 #        return challenger
-#    
-#    
+#
+#
 #    def get_arms(self,withFig=False):
 #        # This returns two arms to compare.
 #        firstPlace = self.sampleTournament(withFig)

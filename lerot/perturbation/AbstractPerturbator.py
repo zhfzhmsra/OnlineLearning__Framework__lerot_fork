@@ -13,22 +13,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Lerot.  If not, see <http://www.gnu.org/licenses/>.
 
-import scipy
-import scipy.stats
 
-from .AbstractEval import AbstractEval
+class AbstractPerturbator(object):
+    def perturb(self, ranker, query, max_length=None):
+        raise NotImplementedError("perturb must be implemented")
 
-class RPEval(AbstractEval):
-    """Simple vertical selection (RP) metric, a.k.a. corr."""
-
-    def __init__(self):
+    def update(self, new_vector, current_vector, current_query, ranker):
+        """This function is called when the correct solution is known"""
         pass
-
-    def get_value(self, ranking, labels, orientations, cutoff=-1, ideal_ranking=None):
-        assert ideal_ranking is not None
-        if cutoff == -1:
-            cutoff = len(ranking)
-        cutoff = min([cutoff, len(ranking), len(ideal_ranking)])
-        this_page_rels = [labels[d.get_id()] for d in ranking[:cutoff]]
-        ideal_page_rels = [labels[d.get_id()] for d in ideal_ranking[:cutoff]]
-        return scipy.stats.spearmanr(this_page_rels, ideal_page_rels)[0]

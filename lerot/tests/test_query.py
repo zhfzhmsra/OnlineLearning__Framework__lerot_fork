@@ -14,13 +14,8 @@
 # along with Lerot.  If not, see <http://www.gnu.org/licenses/>.
 
 import cStringIO
-import os
-import sys
 import unittest
-
-sys.path.insert(0, os.path.abspath('..'))
-
-import query as qu
+import lerot.query as qu
 
 
 class TestQuery(unittest.TestCase):

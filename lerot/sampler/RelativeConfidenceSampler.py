@@ -1,3 +1,18 @@
+# This file is part of Lerot.
+#
+# Lerot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Lerot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Lerot.  If not, see <http://www.gnu.org/licenses/>.
+
 from numpy import *
 from numpy.random import rand, beta
 from random import randint
@@ -27,18 +42,18 @@ class fastBeta:
         self.sampleAllBeta()
         self.depthIndex = 0
         self.upper_or_lower = 'UPPER'
-    
+
     def sampleAllBeta(self):
         self.allSamples = 0.5*ones(self.shape+(self.depth,))
         for r,c in [(row,col) for row in range(self.shape[0]) \
                               for col in range(self.shape[1]) if row != col]:
             self.allSamples[r,c,:] = beta(self.W[r,c],self.W[c,r],self.depth)
-    
+
     def update(self,r,c,w):
         self.W[r,c] = w
         self.allSamples[r,c,:] = beta(self.W[r,c],self.W[c,r],self.depth)
         self.allSamples[c,r,:] = beta(self.W[c,r],self.W[r,c],self.depth)
-    
+
     def getSamples(self):
         if self.upper_or_lower == 'UPPER':
             if self.depthIndex > self.depth-1:
@@ -78,8 +93,8 @@ class RelativeConfidenceSampler(AbstractSampler):
             self.runMessage = ""
         else:
             self.runMessage = "Run %s: " % str(run_count)
-    
-    
+
+
     def sample_tournament(self):
         # firstPlace, secondPlace, SampleWins = sample_tournament()
         Samples = self.betaSamples.getSamples()
@@ -96,8 +111,8 @@ class RelativeConfidenceSampler(AbstractSampler):
             champ = myArgmin(self.numChamps)
             self.numChamps[champ] = self.numChamps[champ]+1
         return champ
-    
-    
+
+
     def do_UCB_rel_champ(self,champ):
         A = self.RealWins[:,champ]
         B = self.RealWins[champ,:]
@@ -105,8 +120,8 @@ class RelativeConfidenceSampler(AbstractSampler):
         ucb = A/N + sqrt(self.alpha*log(self.t)/N)
         challenger = myArgmax(ucb)
         return challenger
-    
-    
+
+
     def get_arms(self):
         # This returns two arms to compare.
         firstPlace = self.sample_tournament()
@@ -115,8 +130,8 @@ class RelativeConfidenceSampler(AbstractSampler):
             logging.info("%d- Selected arm %d and arm %d \nScore sheet: \n%s" \
                     % (self.t, firstPlace, secondPlace, self.RealWins))
         return self.lArms[firstPlace], self.lArms[secondPlace], \
-                            firstPlace, secondPlace    
-    
+                            firstPlace, secondPlace
+
     def update_scores(self,winner,loser):
         winner = self.dictArms[winner]
         loser = self.dictArms[loser]
@@ -124,7 +139,7 @@ class RelativeConfidenceSampler(AbstractSampler):
         self.betaSamples.update(winner,loser,self.RealWins[winner, loser])
         self.t += 1
         return winner
-    
+
     def get_winner(self):
         # This method can be called to find out which arm is the best so far.
         self.numPlays = self.RealWins+self.RealWins.T

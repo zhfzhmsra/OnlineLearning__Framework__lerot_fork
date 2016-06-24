@@ -17,10 +17,10 @@
 
 from numpy import log2
 
-from .AbstractEval import AbstractEval
+from .NdcgEval import NdcgEval
 
 
-class LetorNdcgEval(AbstractEval):
+class LetorNdcgEval(NdcgEval):
     """Compute NDCG as implemented in the Letor toolkit."""
 
     def get_dcg(self, labels, cutoff=-1):

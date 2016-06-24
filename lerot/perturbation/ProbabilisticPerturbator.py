@@ -13,31 +13,13 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Lerot.  If not, see <http://www.gnu.org/licenses/>.
 
-class LivingLabsEval:
-
-    __wins_list__ = None
+from AbstractProbabilisticPerturbator import AbstractProbabilisticPerturbator
 
 
-    def __init__(self):
-        self.__wins_list__ = []
+class ProbabilisticPerturbator(AbstractProbabilisticPerturbator):
+    # swap_prob 0.25, gives a good result according to papers
+    def __init__(self, swap_prob=0.25):
+        self.swap_prob = swap_prob
 
-
-
-    def update_score(self, wins):
-        self.__wins_list__.append(wins)
-
-
-    def get_win(self):
-        return self.__wins_list__[len(self.__wins_list__)-1]
-
-
-    def get_performance(self):
-        total_wins = 0
-        total_losses = 0
-        for i in self.__wins_list__:
-            if i[0]>i[1]:
-                total_wins += 1
-            if i[0]<i[1]:
-                total_losses += 1
-        if total_wins > 0:
-            return (float(total_wins) / (total_losses + total_wins) )
+    def perturb(self, *args, **kwargs):
+        return self._perturb(self.swap_prob, *args, **kwargs)

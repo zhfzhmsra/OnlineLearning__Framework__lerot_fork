@@ -299,7 +299,7 @@ class MetaExperiment:
     def run_celery(self):
         self.queuename = self.meta_args["experiment_name"]
         if "queue_name" in self.meta_args and \
-                    not self.meta_args["queue_name"] == None:
+                    not self.meta_args["queue_name"] is None:
             self.queuename = self.meta_args["queue_name"]
         logging.info("Submitting %d tasks to queue %s " %
                      (len(self.configurations),

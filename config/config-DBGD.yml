@@ -1,0 +1,30 @@
+test_queries: data/Fold1/test.txt
+training_queries: data/Fold1/train.txt
+feature_count: 64 # 64 for .Gov, 46 for MQ*, 136 for MSLR
+num_runs: 10
+num_queries: 1017
+processes: 1
+query_sampling_method: fixed
+user_model: environment.RelevantUserModel
+# for p-click and p-stop provide mappings from relevance grades to probabilities
+user_model_args: -limit -1
+system: retrieval_system.ListwiseLearningSystem
+system_args: --init_weights random
+    --sample_weights sample_unit_sphere
+    --comparison comparison.TeamDraft
+    --delta 0.1
+    --alpha 0.01
+    --ranker ranker.DeterministicRankingFunction
+    --ranker_tie random
+
+output_dir: DBGD-output
+output_dir_overwrite: True
+output_prefix: Fold1
+
+# Possible parameters for now:
+#   - cutoff: will cut off the ranking for every eval
+#             (offline/online, train/test). Not using this parameter will
+#             default it to the length of the ranking
+evaluation:
+    - evaluation.NdcgEval cutoff 5
+experimenter: experiment.LearningExperiment

@@ -1,3 +1,18 @@
+# This file is part of Lerot.
+#
+# Lerot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Lerot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Lerot.  If not, see <http://www.gnu.org/licenses/>.
+
 from numpy import *
 set_printoptions(precision=5, suppress=True, linewidth=999999)
 from numpy.random import rand, beta, shuffle
@@ -28,7 +43,7 @@ class BeatTheMeanSampler(AbstractSampler):
                             action="store_true", default=False)
         # Parameters specific to Beat the Mean:
         parser.add_argument("--sampler_horizon", type=int, default=1000)
-        parser.add_argument("--sampler_non_transitivity", 
+        parser.add_argument("--sampler_non_transitivity",
                             type=float, default=1.)
         args = vars(parser.parse_known_args(arg_str.split())[0])
         self.nArms = len(arms)  # Number of arms
@@ -87,7 +102,7 @@ class BeatTheMeanSampler(AbstractSampler):
             self.RealWins = self.RealWins[newInds][:,newInds]
             logging.info("%s%d- Number of remaining arms: %d\n"\
                          % (self.runMessage,self.t,self.nArms)
-                         +" Remainging Arms: \n%s" % 
+                         +" Remainging Arms: \n%s" %
                          sorted([self.initArms.index(a) for a in self.lArms]))
 
     def update_scores(self, winner, loser, score=1):
@@ -109,7 +124,7 @@ class BeatTheMeanSampler(AbstractSampler):
             logging.info("Score sheet: \n%s" % self.RealWins)
         self.t += 1
         return self.dictArms[winner]
-    
+
     def get_winner(self):
         Wins = self.RealWins.sum(axis=1)
         N = self.numPlays.sum(axis=1)
