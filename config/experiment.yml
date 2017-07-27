@@ -1,0 +1,24 @@
+training_queries: /home/zhfzh/fuz/codes/lerot/data/Fold1/train.txt
+test_queries: /home/zhfzh/fuz/codes/lerot/data/Fold1/test.txt
+feature_count: 64
+num_runs: 1
+num_queries: 10
+query_sampling_method: random
+output_dir: outdir
+output_prefix: Fold1
+user_model: environment.CascadeUserModel
+user_model_args:
+    --p_click 0:0.0,1:0.5,2:1.0
+    --p_stop 0:0.0,1:0.0,2:0.0
+system: retrieval_system.ListwiseLearningSystem
+system_args:
+    --init_weights random
+    --sample_weights sample_unit_sphere
+    --comparison comparison.ProbabilisticInterleave
+    --delta 0.1
+    --alpha 0.01
+    --ranker ranker.ProbabilisticRankingFunction
+    --ranker_arg 3
+    --ranker_tie random
+evaluation:
+    - evaluation.NdcgEval
